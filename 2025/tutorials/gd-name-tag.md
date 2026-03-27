@@ -35,11 +35,6 @@ basic.forever(function() {})
 ```
 
 <script src="https://makecode.com/gh-pages-embed.js"></script>
-<script src="https://makecode.com/tutorial-embed.js"></script>
-<link rel="stylesheet" href="https://makecode.com/content/projects.css">
 <script>
   makeCodeRender("{{ site.makecode.home_url }}", "{{ site.github.owner_name }}/{{ site.github.repository_name }}");
-
-  // Render für Tutorial-spezifische Inline-Blöcke
-  makeCodeTutorialRender(document);
 </script>
