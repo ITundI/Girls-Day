@@ -82,6 +82,7 @@ basic.forever(function () {
 ## { ~ hint }
  
 Wenn du ein micro:bit besitzt, dass die Ampel sein soll, schließe es an deinen Computer an und klicke auf ``|Download|``. Folge den Anweisungen, um deinen Code auf das micro:bit zu übertragen. Sobald dein Code heruntergeladen ist, kannst du deinen micro:bit als Ampel für Rotes-Licht-Grünes-Licht nutzen.
+Es kann auch hilfreich sein, sich den Code als hex-Datei herunterzuladen, um leichter zwischen Ampel und Spieler-Code auf seinem micro:bit zu wechseln.
  
 ## { Verbessere das Spiel }
  
@@ -106,8 +107,10 @@ basic.forever(function () {
 ```
  
 ## { Mitspieler: Der Spielercode }
- 
-Der Code für die anderen Spieler muss auf den Zustand der Ampel achten.
+
+Nun schreiben wir den Code für die anderen Spieler. 
+Dieser Code muss auf den Zustand der Ampel achten.
+Du kannst den bestehenden Code anpassen oder alles entfernen und neu hinzufügen.
  
 ## { Mitspieler: Zustände }
  
@@ -136,6 +139,8 @@ radio.setGroup(1)
 ## { Mitspieler: Kommunikation }
  
 Wir verwenden den ``||radio:wenn Zahl empfangen||``-Block, um den Ampelstatus in der ``zustand``-Variable zu speichern.
+``||variables:Setze ||`` dafür im ``||radio:wenn Zahl empfangen||``-Block ``zustand`` auf ``empfangeneZahl``.
+``empfangeneZahl`` kann aus dem Block gezogen werden und findet sich nicht in den ``||variables:Variable||``n, da sie nur für diesen Block verfügbar ist.
  
 ```blocks
 let roteslicht = 0
@@ -151,7 +156,10 @@ radio.onReceivedNumber(function (receivedNumber) {
  
 ## { Mitspieler: Anzeige }
  
-In einer ``||basic:dauerhaft||``-Schleife zeigen wir je nach Spielstatus unterschiedliche Symbole an. Verwende einen ``||logic:wenn ... dann||``- und einen ``||basic:zeige Symbol||``-Block, um den Spielstatus anzuzeigen.
+In einer ``||basic:dauerhaft||``-Schleife zeigen wir je nach Spielstatus unterschiedliche Symbole an. 
+Wenn du den Ampel-Code nicht gelöscht hattest, entferne nun den ``||radio:sende Zahl||``-Block.
+Verwende einen ``||logic:wenn ... dann||``- und einen ``||basic:zeige Symbol||``-Block, um den Spielstatus anzuzeigen.
+Außerdem wirst du ``||logic:0=0||`` und die ``||variables:Variable||``n benötigen.
  
 ```blocks
 let roteslicht = 0
@@ -174,11 +182,72 @@ Der micro:bit wirkt ständig unter Schwerkraft, daher liegt die Beschleunigung i
  
 ``bewegung = | beschleunigung - 1000 |``
  
-## { Mitspieler: Umsetzung }
+## { Mitspieler: Bewegung berechnen }
 Da wir nun die Mathematik dahinter kennen, können wir dies in Code umwandeln.
 Ziehe eine neue ``||basic:dauerhaft||``-Schleife auf die Arbeitsfläche und in diese einen ``||logic:wenn ... dann||``-Block mit der Bedingung ``zustand = roteslicht``.
-Wir benötigen eine ``bewegung`` ``||variables:Variable||`` die auf ``||math:absolute Werte von||`` gesetzt wird. Dieser Block enthält einen ``||math:Minus||``-Block aus ``||input:Beschleunigung||`` und ``1000``.
+Wir benötigen eine ``bewegung`` ``||variables:Variable||`` die auf ``||math:Betrag von||`` gesetzt wird. Dieser Block enthält einen ``||math:Minus||``-Block aus ``||input:Beschleunigung||`` (Stärke auswählen) und ``1000``.
  
+```blocks
+let bewegung = 0
+let roteslicht = 0
+let zustand = 0
+let grueneslicht = 0
+radio.onReceivedNumber(function (receivedNumber) {
+    zustand = receivedNumber
+})
+grueneslicht = 1
+roteslicht = 2
+radio.setGroup(1)
+basic.forever(function () {
+    if (zustand == grueneslicht) {
+        basic.showIcon(IconNames.Yes)
+    } else if (zustand == roteslicht) {
+        basic.showIcon(IconNames.No)
+    }
+})
+basic.forever(function () {
+    if (zustand == roteslicht) {
+        bewegung = Math.abs(input.acceleration(Dimension.Strength) - 1000)
+    }
+})
+```
+ 
+## { Mitspieler: Bewegung auswerten }
+Wenn die ``bewegung`` größer als 100 ist, sollte das Spiel beendet werden, da sich der Spieler bewegt hat.
+Ziehe einen ``||logic:wenn ||``-Block unter die Berechnung und prüfe ob ``||logic:bewegung > 100 ||`` ist.
+Wenn dies der Fall ist, ziehe einen ``||game:Spiel beendet||``-Block in die Bedingung.
+
+```blocks
+let bewegung = 0
+let roteslicht = 0
+let zustand = 0
+let grueneslicht = 0
+radio.onReceivedNumber(function (receivedNumber) {
+    zustand = receivedNumber
+})
+grueneslicht = 1
+roteslicht = 2
+radio.setGroup(1)
+basic.forever(function () {
+    if (zustand == grueneslicht) {
+        basic.showIcon(IconNames.Yes)
+    } else if (zustand == roteslicht) {
+        basic.showIcon(IconNames.No)
+    }
+})
+basic.forever(function () {
+    if (zustand == roteslicht) {
+        bewegung = Math.abs(input.acceleration(Dimension.Strength) - 1000)
+        if (bewegung > 100) {
+            game.gameOver()
+        }
+    }
+})
+```
+ 
+## { Mitspieler: restlichen Ampel Code entfernen }
+Wenn du zunächst den Ampelcode stehen gelassen hast, entferne nun die Blöcke samt Inhalt ``||input:wenn Knopf A geklickt||`` und ``||input:wenn Knopf B geklickt||``
+
 ```blocks
 let bewegung = 0
 let roteslicht = 0
