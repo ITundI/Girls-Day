@@ -1,5 +1,5 @@
 
-> Diese Seite bei [https://ITundI.github.io/Girls-Day/](https://ITundI.github.io/Girls-Day/) öffnen
+> Diese Seite bei [https://github.com/ITundI/Girls-Day/](https://github.com/ITundI/Girls-Day/) öffnen
 
 ## Als Erweiterung verwenden
 
