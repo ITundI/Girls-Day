@@ -2,9 +2,7 @@
  
 ## Verwandle dein micro:bit in ein digitales Namensschild @unplugged
 
-24.03.2026 - 15:40 | Test mit scripts für die Darstellung der md. ####
-Nochmal eine Änderung am 17.03.2026 - 06:52. Release kommt dann kurz darauf
-Änderung 14:22 Uhr. Eine Änderung 13.03.2026 - 13:38 :-) Noch eine Änderung 14:12
+20.04.2026 - 11:23 Nochmal ein Update-Test
 Zeige deinen Namen mit 💡 LEDs 💡! Programmiere den micro:bit, damit er deinen Namen über die Anzeige laufen lässt.
  
 ![Name scrolling on the LEDs](/static/mb/projects/name-tag/name-tag.gif)
